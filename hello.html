@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>React Hello</title>
+        <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+        <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+        <!-- I know that I should not use it in production, but I am just playing now. -->
+        <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+        <style type="text/css">
+            .bmi-calculator {
+                border: 1px solid black;
+                border-radius: 7px;
+                background-color: #efefef;
+                padding: 8px;
+            }
+            .bmi-calculator ul {
+                list-style-type: none;
+                margin: 0; padding: 0;
+            }
+            .bmi-calculator li.caption {
+                margin-bottom: 5px;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="root"></div>
+        <script type="text/babel">
+
+            function Header() {
+                return (
+                    <h1>Rabboh's React Playground</h1>
+                )
+            }
+
+            function Introduction() {
+                return (
+                    <h2>I am learning React frontend development right now</h2>
+                )
+            }
+
+            class BmiCalculator extends React.Component {
+
+                constructor(props) {
+                    super(props);
+                    this.state = { height: '', weight: '', bmi: '' }
+                    this.handleChange = this.handleChange.bind(this);
+                }
+
+                handleChange(e) {
+                    if (e.target.name == 'height') {
+                        this.setState({height: event.target.value});
+                    }
+                    if (e.target.name == 'weight') {
+                        this.setState({weight: event.target.value});
+                    }
+                    this.calculateBmi()
+                }
+
+                calculateBmi() {
+                    var height = parseFloat(this.state.height);
+                    var weight = parseFloat(this.state.weight);
+                    if (isNaN(height) || isNaN(weight)) {
+                        return '';
+                    }
+                    if (this.props.heightScale == 'cm') {
+                        height = height / 100;
+                    }
+                    var calcBmi = weight/(height*height);
+                    this.setState({bmi: calcBmi});
+                }
+
+                render() {
+                    return (
+                        <div className="bmi-calculator">
+                            <form action="">
+                                <ul>
+                                    <li><input type="text" name="height" id="height" value={this.state.height} onKeyUp={this.handleChange} onChange={this.handleChange} /></li>
+                                    <li className="caption"><small>Your height in {this.props.heightScale}</small></li>
+                                    <li><input type="text" name="weight" id="weight" value={this.state.weight} onKeyUp={this.handleChange} onChange={this.handleChange} /></li>
+                                    <li className="caption"><small>Your weight in kg</small></li>
+                                    <li><input type="text" disabled="disabled" id="bmi" value={this.state.bmi} /></li> 
+                                    <li className="caption"><small>Your BMI</small></li>
+                                </ul>
+                            </form>
+                        </div>
+                    );
+                }
+
+            }
+
+            class MainApp extends React.Component {
+                render() {
+                    return (
+                        <div>
+                            <p>Please try my Body Mass Index (BMI) calculator!</p>
+                            <BmiCalculator heightScale="cm" />
+                        </div>
+                    );
+                }
+            }
+
+            function MyApp() {
+                return (
+                    <div>
+                        <Header />
+                        <Introduction />
+                        <MainApp />
+                    </div>
+                );
+            }
+
+            const container = document.getElementById('root');
+            const root = ReactDOM.createRoot(container);
+            root.render(<MyApp />);
+
+        </script>
+    </body>
+</html>
