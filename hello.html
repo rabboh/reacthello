@@ -21,6 +21,28 @@
             .bmi-calculator li.caption {
                 margin-bottom: 5px;
             }
+            .weight-evaluator {
+                margin-bottom: 5px;
+                font-size: 32px;
+                font-weight: bold;
+                text-transform: uppercase;
+                font-family: Arial, Helvetica, sans-serif;
+            }
+            .weight-evaluator .bmi-underweight {
+                color: #9292f5;
+            }
+            .weight-evaluator .bmi-healthy {
+                color: #478d47;
+            }
+            .weight-evaluator .bmi-overweight {
+                color: #f0285a;
+            }
+            .weight-evaluator .bmi-obese {
+                color: #8d2821;
+            }
+            .weight-evaluator .bmi-unknown {
+                color: #6b6b6b;
+            }
         </style>
     </head>
     <body>
@@ -37,6 +59,38 @@
                 return (
                     <h2>I am learning React frontend development right now</h2>
                 )
+            }
+
+            class WeightEvaluator extends React.Component {
+                render() {
+                    console.log(parseFloat(this.props.bmi));
+                    if (isNaN(parseFloat(this.props.bmi))) {
+                        return (
+                            <div className="bmi-unknown">Type your data...</div>
+                        );
+                    }
+                    if (this.props.bmi < 18.5) {
+                        return (
+                            <div className="bmi-underweight">Underweight</div>
+                        );
+                    } else if (this.props.bmi >=18.5 && this.props.bmi < 25) {
+                        return (
+                            <div className="bmi-healthy">Healthy weight</div>
+                        );
+                    } else if (this.props.bmi >=25 && this.props.bmi < 30) {
+                        return (
+                            <div className="bmi-overweight">Overweight</div>
+                        );
+                    } else if (this.props.bmi > 30) {
+                        return (
+                            <div className="bmi-obese">Obese</div>
+                        );
+                    } else {
+                        return (
+                            <div className="bmi-unknown">Type your data...</div>
+                        );
+                    }   
+                }
             }
 
             class BmiCalculator extends React.Component {
@@ -72,17 +126,22 @@
 
                 render() {
                     return (
-                        <div className="bmi-calculator">
-                            <form action="">
-                                <ul>
-                                    <li><input type="text" name="height" id="height" value={this.state.height} onKeyUp={this.handleChange} onChange={this.handleChange} /></li>
-                                    <li className="caption"><small>Your height in {this.props.heightScale}</small></li>
-                                    <li><input type="text" name="weight" id="weight" value={this.state.weight} onKeyUp={this.handleChange} onChange={this.handleChange} /></li>
-                                    <li className="caption"><small>Your weight in kg</small></li>
-                                    <li><input type="text" disabled="disabled" id="bmi" value={this.state.bmi} /></li> 
-                                    <li className="caption"><small>Your BMI</small></li>
-                                </ul>
-                            </form>
+                        <div className="bmi-calculator-out">
+                            <div className="weight-evaluator">
+                                <WeightEvaluator bmi={this.state.bmi} />
+                            </div>
+                            <div className="bmi-calculator">
+                                <form action="">
+                                    <ul>
+                                        <li><input type="text" name="height" id="height" value={this.state.height} onKeyUp={this.handleChange} onChange={this.handleChange} /></li>
+                                        <li className="caption"><small>Your height in {this.props.heightScale}</small></li>
+                                        <li><input type="text" name="weight" id="weight" value={this.state.weight} onKeyUp={this.handleChange} onChange={this.handleChange} /></li>
+                                        <li className="caption"><small>Your weight in kg</small></li>
+                                        <li><input type="text" disabled="disabled" id="bmi" value={this.state.bmi} /></li> 
+                                        <li className="caption"><small>Your BMI</small></li>
+                                    </ul>
+                                </form>
+                            </div>
                         </div>
                     );
                 }
