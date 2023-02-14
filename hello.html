@@ -43,6 +43,34 @@
             .weight-evaluator .bmi-unknown {
                 color: #6b6b6b;
             }
+
+            .color-calculator {
+                border: 1px solid black;
+            }
+            .color-calculator .input-fields {
+                display: table-cell;
+                width: 50%;
+                vertical-align: top;
+                padding: 10px;
+            }
+            .color-calculator .display-color {
+                display: table-cell;
+                width: 50%;
+                border-left: 1px solid black;
+                vertical-align: top;
+                padding: 10px;
+            } 
+            .color-calculator #color-box {
+                width: 100px;
+                height: 100px;
+                border: 1px solid black;
+                display: inline-block;
+                background: #000;
+            }
+            .color-calculator .top {
+                display: table-row;
+                width: 100%;
+            }
         </style>
     </head>
     <body>
@@ -97,7 +125,7 @@
 
                 constructor(props) {
                     super(props);
-                    this.state = { height: '', weight: '', bmi: '' }
+                    this.state = { height: 0, weight: 0, bmi: 0 }
                     this.handleChange = this.handleChange.bind(this);
                 }
 
@@ -148,12 +176,73 @@
 
             }
 
+            class ColorCalculator extends React.Component {
+
+                constructor(props) {
+                    super(props);
+                    this.state = { cr: 0, cg: 0, cb: 0, htmlhex: '' }
+                    this.handleChange = this.handleChange.bind(this);
+                }
+
+                handleChange(e) {
+                    if (e.target.name == 'cr') {
+                        this.setState({cr: e.target.value});
+                    }
+                    if (e.target.name == 'cg') {
+                        this.setState({cg: e.target.value});
+                    }
+                    if (e.target.name == 'cb') {
+                        this.setState({cb: e.target.value});
+                    }
+                    this.calculateHtmlColor();
+                }
+
+                componentToHex(c) {
+                    var hex = c.toString(16);
+                    return hex.length == 1 ? "0" + hex : hex;
+                }
+
+                rgbToHex(r, g, b) {
+                    return "#" + this.componentToHex(r) + this.componentToHex(g) + this.componentToHex(b);
+                }
+
+                calculateHtmlColor() {
+                    var hex = this.rgbToHex(this.state.cr, this.state.cg, this.state.cb)
+                    this.setState({ htmlhex: hex });
+                    document.getElementById('color-box').style.backgroundColor = hex;
+                }
+
+                render() {
+                    return (
+                        <div className="color-calculator">
+                            <div className="top">
+                                <div className="input-fields">
+                                    <ul>
+                                        <li>R: <input type="text" name="cr" id="cr" value={this.state.cr} onKeyUp={this.handleChange} onChange={this.handleChange} /></li>
+                                        <li>G: <input type="text" name="cg" id="cg" value={this.state.cg} onKeyUp={this.handleChange} onChange={this.handleChange} /></li>
+                                        <li>B: <input type="text" name="cb" id="cb" value={this.state.cb} onKeyUp={this.handleChange} onChange={this.handleChange} /></li>
+                                    </ul>
+                                </div>
+                                <div className="display-color">
+                                    <div id="color-box"></div>
+                                </div>
+                            </div>
+                            <div className="saved-items">
+
+                            </div>
+                        </div>
+                    );
+                }
+            }
+
             class MainApp extends React.Component {
                 render() {
                     return (
                         <div>
                             <p>Please try my Body Mass Index (BMI) calculator!</p>
                             <BmiCalculator heightScale="cm" />
+                            <p>RGB to HTML color code converter, let's try this too</p>
+                            <ColorCalculator />
                         </div>
                     );
                 }
